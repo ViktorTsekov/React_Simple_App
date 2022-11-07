@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './redux/store'
-import { setTasks, toggleTaskById } from './redux/tasksSlice'
+import { setTasks } from './redux/tasksSlice'
 import TasksTable from './tasksTable'
 
 const Tasks: React.FC = () => {
