@@ -8,8 +8,10 @@ import Header from './header'
 const App: React.FC = () => {
   return (
     <Router>
-      <div className='content'>
+      <div className='header'>
         <Header />
+      </div>
+      <div className='content'>
         <Routes>
           <Route path='/' element={<Users />} />
           <Route path='/posts' element={<UserPosts />} />

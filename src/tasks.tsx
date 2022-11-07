@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './redux/store'
 import { setTasks, toggleTaskById } from './redux/tasksSlice'
+import TasksTable from './tasksTable'
 
 const Tasks: React.FC = () => {
   const [titleFilter, setTitleFilter] = useState('')
@@ -101,24 +102,7 @@ const Tasks: React.FC = () => {
           <option value="not completed">Not completed</option>
         </select>
       </div>
-      <table style={{margin: '20px', backgroundColor: 'black', width: '600px'}}>
-        <tr style={{backgroundColor: 'grey'}}>
-          <th style={{width: '200px'}}>Task</th>
-          <th style={{width: '200px'}}>Owner</th>
-          <th style={{width: '200px'}}>Is completed</th>
-        </tr>
-        {
-          filteredTasks.map((task: any, index: number) => {
-            return <tr key={index} style={{backgroundColor: 'lightgrey', textAlign: 'center'}}>
-              <td>{task.title}</td>
-              <td>{getUserNameById(task.userId)}</td>
-              <td><input type="checkbox" checked={task.completed} onChange={() => dispatch(toggleTaskById({
-                taskId: task.id,
-              }))} /></td>
-            </tr>
-          })
-        }
-      </table>
+      <TasksTable data={filteredTasks} getUserNameById={getUserNameById}/>
     </div>
   )
 }
