@@ -25,6 +25,10 @@ const TasksTable: React.FC<props> = ({data, getUserNameById}) => {
     }
   }
 
+  const printPageNumber = () => {
+    return `${currentPage}/${tablePages.length === 0 ? 1 : tablePages.length}`
+  }
+
   useEffect(() => {
     const chunkSize = 10
     let pages: any[] = []
@@ -38,7 +42,10 @@ const TasksTable: React.FC<props> = ({data, getUserNameById}) => {
     }
 
     setTablePages(pages)
-    setCurrentPage(1)
+
+    if(currentPage > pages.length) {
+      setCurrentPage(pages.length === 0 ? 1 : pages.length)
+    }
   }, [data])
 
   return (
@@ -66,7 +73,7 @@ const TasksTable: React.FC<props> = ({data, getUserNameById}) => {
         }
       </table>
       <div style={{marginLeft: '20px'}}>
-        Page: {currentPage}/{tablePages.length === 0 ? 1 : tablePages.length}
+        Page: {printPageNumber()}
         <button style={{marginRight: '10px', marginLeft: '10px'}} onClick={() => decreasePageNumber()}>Prev</button>
         <button onClick={() => increasePageNumber()}>Next</button>
       </div>

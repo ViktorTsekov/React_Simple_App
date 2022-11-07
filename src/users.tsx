@@ -18,7 +18,6 @@ const Users: React.FC = () => {
 
   return (
     <>
-      <p style={{marginLeft: '24px'}}>Users: </p>
       {
         users.map((user: any, index: React.Key) => {
           return <User key={index} data={user}/>

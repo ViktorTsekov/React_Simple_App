@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from './redux/store'
+import { useDispatch } from 'react-redux'
 import { updateUserById } from './redux/usersSlice'
 import { useNavigate } from "react-router-dom"
 
@@ -20,7 +19,6 @@ const UserForm: React.FC<props> = ({data, collapseSection}) => {
   const [requiredFieldsAreMissing, setRequiredFieldsAreMissing] = useState(false)
   const [changesAreMade, setChangesAreMade] = useState(false)
 
-  const users = useSelector((state: RootState) => state.usersReducer.users)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -47,8 +45,7 @@ const UserForm: React.FC<props> = ({data, collapseSection}) => {
 
     if(requiredFieldsAreValid()) {
       dispatch(updateUserById({
-        updatedUser: newUser,
-        currentUsers: users
+        updatedUser: newUser
       }))
       
       collapseSection()

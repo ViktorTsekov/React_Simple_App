@@ -50,8 +50,6 @@ const UserPosts: React.FC = () => {
           return <Post key={index} index={index} data={post}/>
         })
       }
-      <button onClick={() => navigate('/')} style={{marginLeft: '24px'}}>Go back</button>
-      <br/> <br/>
     </div>
   )
 }

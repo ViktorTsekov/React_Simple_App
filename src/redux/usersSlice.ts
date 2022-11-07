@@ -19,7 +19,7 @@ export const usersSlice = createSlice({
     updateUserById: (state, action: PayloadAction<any>) => {
       const id = action.payload.updatedUser.id
 
-      const newUsers = action.payload.currentUsers.map((user: any) => {
+      const newUsers = state.users.map((user: any) => {
         if(user.id === id) {
           return action.payload.updatedUser
         } else {
