@@ -8,6 +8,7 @@ import Post from './post'
 
 const UserPosts: React.FC = () => {
   const [postsOfCurrentUser, setPostsOfCurrentUser] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -22,7 +23,24 @@ const UserPosts: React.FC = () => {
     }
   })[0]
 
+  const printUserPosts = () => {
+    if(postsOfCurrentUser.length === 0) {
+      return <div style={{margin: "24px"}}>No posts to display</div>
+    }
+
+    return <>
+      <p style={{marginLeft: '24px'}}>Posts: </p>
+      {
+        postsOfCurrentUser.map((post: any, index: number) => {
+          return <Post key={index} index={index} data={post}/>
+        })
+      }
+    </>
+  }
+
   useEffect(() => {
+    setIsLoading(true)
+
     fetch(`https://jsonplaceholder.typicode.com/posts?userId=${location.state.userId}`)
       .then((response) => response.json())
       .then((json) => {
@@ -31,6 +49,8 @@ const UserPosts: React.FC = () => {
           userPosts: json,
         }))
       })
+      .catch((err) => console.error('Unexpected error has occurred: ', err))
+      .finally(() => setIsLoading(false))
   }, [])
 
   useEffect(() => {
@@ -43,12 +63,18 @@ const UserPosts: React.FC = () => {
 
   return (
     <div>
-      <User data={user}/>
-      <p style={{marginLeft: '24px'}}>Posts: </p>
       {
-        postsOfCurrentUser.map((post: any, index: number) => {
-          return <Post key={index} index={index} data={post}/>
-        })
+        isLoading && <div style={{margin: "24px"}}>Loading...</div>
+      }
+      {
+        !isLoading && (
+          <>
+            <User data={user}/>
+            {
+              printUserPosts()
+            }
+          </> 
+        )
       }
     </div>
   )

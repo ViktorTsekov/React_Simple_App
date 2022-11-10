@@ -9,6 +9,7 @@ const Tasks: React.FC = () => {
   const [ownerFilter, setOwnerFilter] = useState('')
   const [isCompletedFilter, setIsCompletedFilter] = useState('')
   const [filteredTasks, setFilteredTasks] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const users = useSelector((state: RootState) => state.usersReducer.users)
   const tasks = useSelector((state: RootState) => state.tasksReducer.tasks)
@@ -23,7 +24,17 @@ const Tasks: React.FC = () => {
     })[0].name
   }
 
+  const printTasksTable = () => {
+    if(filteredTasks.length === 0) {
+      return <div style={{margin: '24px'}}>No content to display</div>
+    }
+
+    return <TasksTable data={filteredTasks} getUserNameById={getUserNameById}/>
+  }
+
   useEffect(() => {
+    setIsLoading(true)
+
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then(res => res.json())
       .then(json => {
@@ -33,6 +44,10 @@ const Tasks: React.FC = () => {
         } else {
           setFilteredTasks(tasks)
         }
+      })
+      .catch((err) => console.error('Unexpected error has occurred: ', err))
+      .finally(() => {
+        setIsLoading(false)
       })
   }, [])
 
@@ -87,22 +102,29 @@ const Tasks: React.FC = () => {
 
   return (
     <div>
-      <div style={{marginLeft: '24px', marginTop: '10px'}}>
-        <p>Filters: </p>
-        <label>Task title: </label>
-        <input type="text" value={titleFilter} onChange={(e) => setTitleFilter(e.target.value)} />
-        <br />
-        <label>Task owner: </label>
-        <input type="text" value={ownerFilter} onChange={(e) => setOwnerFilter(e.target.value)} />
-        <br />
-        <label>Completed status: </label>
-        <select onChange={(e) => setIsCompletedFilter(e.target.value)}>
-          <option value=""></option>
-          <option value="completed">Completed</option>
-          <option value="not completed">Not completed</option>
-        </select>
-      </div>
-      <TasksTable data={filteredTasks} getUserNameById={getUserNameById}/>
+      {
+        isLoading && <div style={{margin: '24px'}}>Loading...</div>
+      }
+      {
+        !isLoading && <>
+          <div style={{marginLeft: '24px', marginTop: '10px'}}>
+            <p>Filters: </p>
+            <label>Task title: </label>
+            <input type="text" value={titleFilter} onChange={(e) => setTitleFilter(e.target.value)} />
+            <br />
+            <label>Task owner: </label>
+            <input type="text" value={ownerFilter} onChange={(e) => setOwnerFilter(e.target.value)} />
+            <br />
+            <label>Completed status: </label>
+            <select onChange={(e) => setIsCompletedFilter(e.target.value)}>
+              <option value=""></option>
+              <option value="completed">Completed</option>
+              <option value="not completed">Not completed</option>
+            </select>
+          </div>
+          {printTasksTable()}
+        </>
+      }
     </div>
   )
 }
